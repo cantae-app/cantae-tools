@@ -3,40 +3,41 @@ import midi
 import tags
 import glob
 import separator
-
-directory = 'C:/Users/luciano.oliveira/Music/Normais'
-model_filename = 'UVR_MDXNET_KARA_2.onnx'
-output_format = 'mp3'
-output_dir = 'C:/Users/luciano.oliveira/Music/Separadas'
-audio_extensions = ['*.mp3', '*.wav', '*.flac', '*.aac', '*.ogg']
-audio_files = []
-count = 0
-
-#check if the directory exists
-if not Path(directory).exists():
-    print(f'Error: Directory {directory} does not exist')
-    exit()
-
-for ext in audio_extensions:
-    audio_files.extend(glob.glob(f'{directory}/{ext}'))
-
-for audio_file in audio_files:
-
-    audio_file_path = Path(audio_file)
-    audio_file_name = audio_file_path.stem
-    count += 1
+import constants
 
 
-    print(f"► Starting {count}/{len(audio_files)}: ", audio_file_name)
+def process(input_dir, output_dir, model, output_format, separate_audio, copy_tags, save_mid, save_lyric):
+    audio_files = []
+    count = 0
 
-    # Separete audio files
-    primary_stem_file, secondary_stem_file = separator.separate(audio_file, audio_file_name, model_filename, output_format, output_dir)
+    #check if the directory exists
+    if not Path(input_dir).exists():
+        print(f'Error: Directory {input_dir} does not exist')
+        exit()
 
-    # Copy original tags
-    tags.copy_tags(audio_file, audio_file_path, primary_stem_file, secondary_stem_file, output_format)
+    for ext in constants.AUDIO_EXTENSIONS:
+        audio_files.extend(glob.glob(f'{input_dir}/{ext}'))
 
-    # Convert vocal to MIDI
-    midi.convert_to_midi(primary_stem_file, output_dir, audio_file_name)
+    for audio_file in audio_files:
+
+        audio_file_path = Path(audio_file)
+        audio_file_name = audio_file_path.stem
+        count += 1
 
 
-print("► Process completed!")
+        print(f"► Starting {count}/{len(audio_files)}: ", audio_file_name)
+
+        # Separete audio files
+        if separate_audio:
+            primary_stem_file, secondary_stem_file = separator.separate(audio_file, audio_file_name, model, output_format, output_dir)
+
+        # Copy original tags
+        if copy_tags:
+            tags.copy_tags(audio_file, audio_file_path, primary_stem_file, secondary_stem_file, output_format)
+
+        # Convert vocal to MIDI
+        if save_mid:
+            midi.convert_to_midi(primary_stem_file, output_dir, audio_file_name)
+
+
+    print("► Process completed!")
