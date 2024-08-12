@@ -1,7 +1,18 @@
+import io
 import flet as ft
 from flet import *
+import sys
 import constants
 # import app
+
+class CapturingOutput(io.StringIO):
+    def __init__(self, text_field):
+        super().__init__()
+        self.text_field = text_field
+
+    def write(self, s):
+        self.text_field.value += s
+        self.text_field.update()
 
 def main(page: ft.Page):
     page.title = "Audio Separator"
@@ -10,16 +21,17 @@ def main(page: ft.Page):
     page.bgcolor = "#111111"
     page.theme_mode = ft.ThemeMode.DARK
     page.padding = 20
-    # page.vertical_alignment = flet.MainAxisAlignment.CENTER
+    empty_directory = "No directory selected"
+    start_process = False
 
     # input directory components
     def input_directory_result(e: FilePickerResultEvent):
-        input_directory_path.value = e.path if e.path else None
+        input_directory_path.value = e.path if e.path else empty_directory
         input_directory_path.update()
 
     input_directory = FilePicker(on_result=input_directory_result)
     input_directory_path = Text(
-        "No directory selected",
+        empty_directory,
         overflow=ft.TextOverflow.ELLIPSIS,
         max_lines=1,
         color="#8e8e8e",
@@ -27,12 +39,12 @@ def main(page: ft.Page):
     )
 
     def output_directory_result(e: FilePickerResultEvent):
-        output_directory_path.value = e.path if e.path else None
+        output_directory_path.value = e.path if e.path else empty_directory
         output_directory_path.update()
 
     output_directory = FilePicker(on_result=output_directory_result)
     output_directory_path = Text(
-        "No directory selected",
+        empty_directory,
         overflow=ft.TextOverflow.ELLIPSIS,
         max_lines=1,
         color="#8e8e8e",
@@ -42,28 +54,24 @@ def main(page: ft.Page):
     # hide all dialogs in overlay
     page.overlay.extend([input_directory, output_directory])
 
+    def create_dropdown(options, label, value=None):
+        return Dropdown(
+            options=options,
+            dense=True,
+            border_color="#2e2e2e",
+            text_size=12,
+            label=label,
+            label_style=TextStyle(color="#8e8e8e", size=12),
+            bgcolor="#1e1e1e",
+            value=value
+        )
+
     #dropdown components
     model_options = [ft.dropdown.Option(option) for option in constants.MODELS]
-    dropdown_model = Dropdown(
-        options=model_options,
-        dense=True,
-        border_color="#2e2e2e",
-        text_size=12,
-        label="Select a model",
-        label_style=TextStyle(color="#8e8e8e", size=12),
-        bgcolor="#1e1e1e"
-    )
+    dropdown_model = create_dropdown(model_options, "Select a model")
 
     format_options = [ft.dropdown.Option(option) for option in constants.OUTPUT_FORMATS]
-    dropdown_format = Dropdown(
-        options=format_options,
-        dense=True,
-        border_color="#2e2e2e",
-        text_size=12,
-        label="Select a format",
-        label_style=TextStyle(color="#8e8e8e", size=12),
-        bgcolor="#1e1e1e"
-    )
+    dropdown_format = create_dropdown(format_options, "Select a format", "mp3")
 
     def create_switch(value=True):
         return Switch(
@@ -136,8 +144,8 @@ def main(page: ft.Page):
     # Checkbox components
     separate_audio = create_switch()
     id3_tags = create_switch()
-    mid_file = create_switch(False)
-    lyric_file = create_switch(False)
+    mid_file = create_switch()
+    lyric_file = create_switch()
 
     separate_card = create_card(
         "Separate",
@@ -170,7 +178,7 @@ def main(page: ft.Page):
         100,
         child=lyric_file
     )
-    
+
     def close_banner(e):
         page.close(banner)
 
@@ -186,13 +194,19 @@ def main(page: ft.Page):
             TextButton(text="ok", style=ButtonStyle(color="white", bgcolor="black"),  on_click=close_banner)
         ],
     )
-    
-    
 
     def on_separate_click():
-        empty = "No directory selected"
-        if not (input_directory_path.value == empty  and input_directory_path.value == empty):
-            print(input_directory_path.value)
+
+        if start_process: return
+
+        if not (input_directory_path.value == empty_directory  and input_directory_path.value == empty_directory):
+            text_field.value = ""
+            start_process = True
+            start_row.controls = [
+                ft.ProgressRing(width=16, height=16, stroke_width = 2, color="white"),
+                ft.Text("Wait for the completion...", color="white", weight=FontWeight.BOLD, size=14)
+            ]
+            page.update()
             # app.process(
             #     input_directory_path.value,
             #     output_directory_path.value,
@@ -203,70 +217,115 @@ def main(page: ft.Page):
             #     mid_file.value,
             #     lyric_file.value
             # )
+            start_process = False
+            start_row.controls = [ft.Text("Process done!", color="white", weight=FontWeight.BOLD, size=14)]
+            page.update()
         else:
             page.open(banner)
 
-    def enable_separate_button():
-        if(input_directory_path.value and input_directory_path.value):
-            return False
-        return True
-
-    page.add(
-        Column(
-            spacing=15,
-            controls=[
-                Container(
-                    content=Image(
-                        src="assets/images/logo.png",
-                        height=40,
-                    ),
-                ),
-                Row(
-                    # alignment=MainAxisAlignment.SPACE_BETWEEN,
-                    spacing=15,
-                    controls=[
-                        input_card,
-                        output_card
-                    ]
-                ),
-                Row(
-                    spacing=15,
-                    controls=[
-                        model_card,
-                        audio_format_card
-                    ]
-                ),
-                Row(
-                    spacing=15,
-                    controls=[
-                        separate_card,
-                        id3_card,
-                        midi_card,
-                        lyric_card
-                    ]
-                ),
-                Row(
-                    spacing=15,
-                    controls=[
-                        Container(
-                            expand=True,
-                            border_radius=10,
-                            bgcolor="#e11d48",
-                            padding=12,
-                            on_click=lambda _: on_separate_click(),
-                            ink=True,
-                            content=Text(
-                                "Separate",
-                                color="white",
-                                size=14,
-                                weight=FontWeight.BOLD
-                            ),
-                        ),
-                    ]
-                )
-            ]
-        )
+    text_field = TextField(
+        multiline=True,
+        text_style=TextStyle(color="#8e8e8e", size=14),
+        border=None,
+        read_only=True,
+        border_color="#1e1e1e",
+    )
+    
+    scroll_log = Column(
+        spacing=10,
+        height=150,
+        scroll=ft.ScrollMode.ALWAYS,
+        auto_scroll=True,
+        controls=[
+            text_field,
+        ]
     )
 
+    # sys.stdout = PrintRedirector(text_field)
+    sys.stdout = CapturingOutput(text_field)
+    sys.stderr = CapturingOutput(text_field)
+    
+    start_row = Row(
+        [
+            ft.Text("Start Process", color="white", weight=FontWeight.BOLD, size=14)
+        ]
+    )
+
+    page.add(
+        Container(
+            content=Column(
+            spacing=15,
+            controls=[
+                    Container(
+                        content=Image(
+                            src="assets/images/logo.png",
+                            height=40,
+                        ),
+                    ),
+                    Row(
+                        # alignment=MainAxisAlignment.SPACE_BETWEEN,
+                        spacing=15,
+                        controls=[
+                            input_card,
+                            output_card
+                        ]
+                    ),
+                    Row(
+                        spacing=15,
+                        controls=[
+                            model_card,
+                            audio_format_card
+                        ]
+                    ),
+                    Row(
+                        spacing=15,
+                        controls=[
+                            separate_card,
+                            id3_card,
+                            midi_card,
+                            lyric_card
+                        ]
+                    ),
+                    Row(
+                        spacing=15,
+                        controls=[
+                            Container(
+                                border_radius=10,
+                                bgcolor="#e11d48",
+                                padding=12,
+                                on_click=lambda _: on_separate_click(),
+                                ink=True,
+                                content=start_row
+                            ),
+                        ]
+                    ),
+                    Row(
+                        spacing=15,
+                        controls=[
+                            Container(
+                                bgcolor="#1e1e1e",
+                                border_radius=10,
+                                padding=12,
+                                expand=True,
+                                content=Column(
+                                    alignment=MainAxisAlignment.SPACE_BETWEEN,
+                                    expand=True,
+                                    controls=[
+                                        Row(
+                                            [
+                                                Icon(icons.TERMINAL, color="#4e4e4e"),
+                                                Text("Log", color="white", weight=FontWeight.BOLD, size=14),
+                                            ]
+                                        ),
+                                        scroll_log
+                                    ]
+                                )
+                            ),
+                        ]
+                    ),
+                ]
+            ),
+        ),
+    )
 
 ft.app(target=main, view=ft.AppView.WEB_BROWSER)
