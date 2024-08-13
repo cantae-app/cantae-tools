@@ -18,7 +18,7 @@ MODELS = [
     'Kim_Vocal_1.onnx',
     'Kim_Vocal_2.onnx',
     'Kim_Inst.onnx',
-    'MDX23C-8KFFT-InstVoc_HQ.ckpt.onnx',
+    'MDX23C-8KFFT-InstVoc_HQ.ckpt',
     'Reverb_HQ_By_FoxJoy.onnx',
 ]
 

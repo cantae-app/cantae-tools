@@ -3,7 +3,7 @@ import flet as ft
 from flet import *
 import sys
 import constants
-# import app
+import app
 
 class CapturingOutput(io.StringIO):
     def __init__(self, text_field):
@@ -15,12 +15,15 @@ class CapturingOutput(io.StringIO):
         self.text_field.update()
 
 def main(page: ft.Page):
-    page.title = "Audio Separator"
+    page.title = "Cantaê Tools"
     page.horizontal_alignment = "center"
     page.scroll = "adaptive"
     page.bgcolor = "#111111"
     page.theme_mode = ft.ThemeMode.DARK
     page.padding = 20
+    page.window.width = 700
+    page.window.height = 800
+    page.window.reziable = False
     empty_directory = "No directory selected"
     start_process = False
 
@@ -68,7 +71,7 @@ def main(page: ft.Page):
 
     #dropdown components
     model_options = [ft.dropdown.Option(option) for option in constants.MODELS]
-    dropdown_model = create_dropdown(model_options, "Select a model")
+    dropdown_model = create_dropdown(model_options, "Select a model", "MDX23C-8KFFT-InstVoc_HQ.ckpt")
 
     format_options = [ft.dropdown.Option(option) for option in constants.OUTPUT_FORMATS]
     dropdown_format = create_dropdown(format_options, "Select a format", "mp3")
@@ -108,7 +111,6 @@ def main(page: ft.Page):
             )
         )
 
-    # Card components
     input_card = create_card(
         "Input Directory",
         icons.INPUT,
@@ -195,30 +197,30 @@ def main(page: ft.Page):
         ],
     )
 
-    def on_separate_click():
+    def on_separate(start):
 
-        if start_process: return
+        if start: return
 
         if not (input_directory_path.value == empty_directory  and input_directory_path.value == empty_directory):
             text_field.value = ""
-            start_process = True
+            start = True
             start_row.controls = [
                 ft.ProgressRing(width=16, height=16, stroke_width = 2, color="white"),
                 ft.Text("Wait for the completion...", color="white", weight=FontWeight.BOLD, size=14)
             ]
             page.update()
-            # app.process(
-            #     input_directory_path.value,
-            #     output_directory_path.value,
-            #     dropdown_model.value,
-            #     dropdown_format.value,
-            #     separate_audio.value,
-            #     id3_tags.value,
-            #     mid_file.value,
-            #     lyric_file.value
-            # )
-            start_process = False
-            start_row.controls = [ft.Text("Process done!", color="white", weight=FontWeight.BOLD, size=14)]
+            app.process(
+                input_directory_path.value,
+                output_directory_path.value,
+                dropdown_model.value,
+                dropdown_format.value,
+                separate_audio.value,
+                id3_tags.value,
+                mid_file.value,
+                lyric_file.value
+            )
+            start = False
+            start_row.controls = [start_text]
             page.update()
         else:
             page.open(banner)
@@ -230,10 +232,10 @@ def main(page: ft.Page):
         read_only=True,
         border_color="#1e1e1e",
     )
-    
+
     scroll_log = Column(
         spacing=10,
-        height=150,
+        height=200,
         scroll=ft.ScrollMode.ALWAYS,
         auto_scroll=True,
         controls=[
@@ -244,16 +246,14 @@ def main(page: ft.Page):
     # sys.stdout = PrintRedirector(text_field)
     sys.stdout = CapturingOutput(text_field)
     sys.stderr = CapturingOutput(text_field)
-    
-    start_row = Row(
-        [
-            ft.Text("Start Process", color="white", weight=FontWeight.BOLD, size=14)
-        ]
-    )
+
+    start_text=ft.Text("Start Process", color="white", weight=FontWeight.BOLD, size=14, disabled=start_process)
+    start_row = Row([start_text])
 
     page.add(
         Container(
             content=Column(
+            expand=True,
             spacing=15,
             controls=[
                     Container(
@@ -263,7 +263,6 @@ def main(page: ft.Page):
                         ),
                     ),
                     Row(
-                        # alignment=MainAxisAlignment.SPACE_BETWEEN,
                         spacing=15,
                         controls=[
                             input_card,
@@ -293,7 +292,7 @@ def main(page: ft.Page):
                                 border_radius=10,
                                 bgcolor="#e11d48",
                                 padding=12,
-                                on_click=lambda _: on_separate_click(),
+                                on_click=lambda _: on_separate(start_process),
                                 ink=True,
                                 content=start_row
                             ),
@@ -327,5 +326,6 @@ def main(page: ft.Page):
             ),
         ),
     )
+
 
 ft.app(target=main, view=ft.AppView.WEB_BROWSER)
