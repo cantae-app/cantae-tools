@@ -5,7 +5,8 @@ def separate(audio_file, file_name, model_filename, output_format, output_dir):
 
     separator = Separator(
         output_format=output_format,
-        output_dir=output_dir
+        output_dir=output_dir,
+        model_file_dir='models',
     )
 
     separator.load_model(model_filename=model_filename)

@@ -2,7 +2,7 @@
     <img src="assets/logo.png" height="50">
 </p>
 
-## Cantaê AI Tools
+# Cantaê AI Tools
 
 Easily separate vocals and instruments, copy tags, generate MIDI files, and generate lyrics.
 
@@ -13,7 +13,11 @@ Easily separate vocals and instruments, copy tags, generate MIDI files, and gene
 - Generate MIDI files from vocals used in the score.
 - Generate lyrics.
 
-## Build Command
+## Commands
 ```
+# Run dev
+flet run main.py -d
+
+# Build app
 flet build windows --output build
 ```

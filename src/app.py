@@ -1,12 +1,13 @@
-from pathlib import Path
-import midi
-import tags
-import glob
-import separator
-import constants
-
 
 def process(input_dir, output_dir, model, output_format, separate_audio, copy_tags, save_mid, save_lyric):
+
+    from pathlib import Path
+    import src.midi as midi
+    import src.tags as tags
+    import glob
+    import src.separator as separator
+    import src.constants as constants
+
     audio_files = []
     count = 0
 

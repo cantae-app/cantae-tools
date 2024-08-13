@@ -2,8 +2,8 @@ import io
 import flet as ft
 from flet import *
 import sys
-import constants
-import app
+import src.constants as constants
+import src.app as app
 
 class CapturingOutput(io.StringIO):
     def __init__(self, text_field):
@@ -258,7 +258,7 @@ def main(page: ft.Page):
             controls=[
                     Container(
                         content=Image(
-                            src="assets/images/logo.png",
+                            src="assets/logo.png",
                             height=40,
                         ),
                     ),
