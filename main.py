@@ -23,6 +23,8 @@ def main(page: ft.Page):
     page.padding = 20
     page.window.width = 700
     page.window.height = 800
+    page.window_min_width = 700
+    page.window_min_height = 800
     page.window.reziable = False
     empty_directory = "No directory selected"
     start_process = False
@@ -93,7 +95,7 @@ def main(page: ft.Page):
             height=height,
             border_radius=10,
             bgcolor="#1e1e1e",
-            on_click=lambda _: function if function() else None,
+            on_click=lambda _: function() if function is not None else None,
             padding=12,
             ink=ink,
             content=Column(
@@ -144,18 +146,18 @@ def main(page: ft.Page):
     )
 
     # Checkbox components
-    separate_audio = create_switch()
+    # separate_audio = create_switch()
     id3_tags = create_switch()
     mid_file = create_switch()
     lyric_file = create_switch()
 
-    separate_card = create_card(
-        "Separate",
-        icons.CALL_SPLIT,
-        None,
-        100,
-        child=separate_audio
-    )
+    # separate_card = create_card(
+    #     "Separate",
+    #     icons.CALL_SPLIT,
+    #     None,
+    #     100,
+    #     child=separate_audio
+    # )
 
     id3_card = create_card(
         "ID3 Tags",
@@ -214,7 +216,6 @@ def main(page: ft.Page):
                 output_directory_path.value,
                 dropdown_model.value,
                 dropdown_format.value,
-                separate_audio.value,
                 id3_tags.value,
                 mid_file.value,
                 lyric_file.value
@@ -279,7 +280,7 @@ def main(page: ft.Page):
                     Row(
                         spacing=15,
                         controls=[
-                            separate_card,
+                            # separate_card,
                             id3_card,
                             midi_card,
                             lyric_card
