@@ -1,5 +1,4 @@
-audio-separator
 mutagen
 basic-pitch[tf]
 flet
-onnxruntime
+audio-separator[gpu]

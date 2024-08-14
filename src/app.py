@@ -20,7 +20,7 @@ def process(input_dir, output_dir, model, output_format, separate_audio, copy_ta
         audio_files.extend(glob.glob(f'{input_dir}/{ext}'))
 
     for audio_file in audio_files:
-        
+
         try:
             audio_file_path = Path(audio_file)
             audio_file_name = audio_file_path.stem
@@ -40,6 +40,6 @@ def process(input_dir, output_dir, model, output_format, separate_audio, copy_ta
             if save_mid:
                 midi.convert_to_midi(primary_stem_file, output_dir, audio_file_name)
         except Exception as e:
-            print(f"ERROR : {e}")
+            return print(f"ERROR : {e}")
 
     print("► Process completed!")
