@@ -3,7 +3,7 @@ import flet as ft
 from flet import *
 import sys
 import src.constants as constants
-import src.app as app
+import inference as inference
 
 class CapturingOutput(io.StringIO):
     def __init__(self, text_field):
@@ -211,7 +211,7 @@ def main(page: ft.Page):
                 ft.Text("Wait for the completion...", color="white", weight=FontWeight.BOLD, size=14)
             ]
             page.update()
-            app.process(
+            inference.process(
                 input_directory_path.value,
                 output_directory_path.value,
                 dropdown_model.value,
