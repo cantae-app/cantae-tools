@@ -2,8 +2,8 @@ import io
 import flet as ft
 from flet import *
 import sys
-import src.constants as constants
-import inference as inference
+import src.constants as contants
+import src.inference as inference
 
 class CapturingOutput(io.StringIO):
     def __init__(self, text_field):
@@ -23,8 +23,8 @@ def main(page: ft.Page):
     page.padding = 20
     page.window.width = 700
     page.window.height = 800
-    page.window_min_width = 700
-    page.window_min_height = 800
+    page.window.min_width = 700
+    page.window.min_height = 800
     page.window.reziable = False
     empty_directory = "No directory selected"
     start_process = False
@@ -72,10 +72,10 @@ def main(page: ft.Page):
         )
 
     #dropdown components
-    model_options = [ft.dropdown.Option(option) for option in constants.MODELS]
+    model_options = [ft.dropdown.Option(option) for option in contants.MODELS]
     dropdown_model = create_dropdown(model_options, "Select a model", "MDX23C-8KFFT-InstVoc_HQ.ckpt")
 
-    format_options = [ft.dropdown.Option(option) for option in constants.OUTPUT_FORMATS]
+    format_options = [ft.dropdown.Option(option) for option in contants.OUTPUT_FORMATS]
     dropdown_format = create_dropdown(format_options, "Select a format", "mp3")
 
     def create_switch(value=True):
@@ -283,7 +283,7 @@ def main(page: ft.Page):
                             # separate_card,
                             id3_card,
                             midi_card,
-                            lyric_card
+                            # lyric_card
                         ]
                     ),
                     Row(

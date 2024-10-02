@@ -7,6 +7,7 @@ def process(input_dir, output_dir, model, output_format, copy_tags, save_mid, sa
     import glob
     import src.separator as separator
     import src.constants as constants
+    # import src.lyrics as lyrics
 
     audio_files = []
     count = 0
@@ -37,7 +38,12 @@ def process(input_dir, output_dir, model, output_format, copy_tags, save_mid, sa
 
             # Convert vocal to MIDI
             if save_mid:
-                midi.convert_to_midi(primary_stem_file, output_dir, audio_file_name)
+                midi.convert_to_midi(secondary_stem_file, output_dir, audio_file_name)
+
+            # Generate lyrics
+            # if save_lyric:
+            #     lyrics.generate_lyrics(secondary_stem_file)
+
         except Exception as e:
             return print(f"ERROR : {e}")
 
