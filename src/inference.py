@@ -7,7 +7,15 @@ def process(input_dir, output_dir, model, output_format, copy_tags, save_mid, sa
     import glob
     import src.separator as separator
     import src.constants as constants
-    # import src.lyrics as lyrics
+    import src.lyrics as lyrics
+    import unicodedata
+    import shutil
+
+    def clean_filename(filename):
+        nfkd = unicodedata.normalize('NFKD', filename)
+        only_ascii = nfkd.encode('ASCII', 'ignore').decode('ASCII')
+        clean_name = only_ascii.replace(' ', '_').replace('&', 'and')
+        return clean_name
 
     audio_files = []
     count = 0
@@ -41,8 +49,15 @@ def process(input_dir, output_dir, model, output_format, copy_tags, save_mid, sa
                 midi.convert_to_midi(secondary_stem_file, output_dir, audio_file_name)
 
             # Generate lyrics
-            # if save_lyric:
-            #     lyrics.generate_lyrics(secondary_stem_file)
+            if save_lyric:
+                secondary_stem_path = Path(secondary_stem_file)
+                clean_name = clean_filename(secondary_stem_path.name)
+                safe_audio_file = secondary_stem_path.parent / clean_name
+
+                if secondary_stem_path != safe_audio_file:
+                    shutil.copy(secondary_stem_file, safe_audio_file)
+
+                lyrics.generate_lyrics(str(safe_audio_file))
 
         except Exception as e:
             return print(f"ERROR : {e}")

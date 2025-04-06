@@ -59,7 +59,7 @@ def main(page: ft.Page):
     # hide all dialogs in overlay
     page.overlay.extend([input_directory, output_directory])
 
-    def create_dropdown(options, label, value=None):
+    def create_dropdown(options, label, value=None, on_change=None):
         return Dropdown(
             options=options,
             dense=True,
@@ -68,15 +68,26 @@ def main(page: ft.Page):
             label=label,
             label_style=TextStyle(color="#8e8e8e", size=12),
             bgcolor="#1e1e1e",
-            value=value
+            value=value,
+            on_change=on_change,
         )
 
     #dropdown components
-    model_options = [ft.dropdown.Option(option) for option in contants.MODELS]
-    dropdown_model = create_dropdown(model_options, "Select a model", "MDX23C-8KFFT-InstVoc_HQ.ckpt")
+    model_options = [ft.dropdown.Option(option) for option in contants.MODELS['mdx23c']]
+    dropdown_model = create_dropdown(model_options, "Select a model", "MDX23C-8KFFT-InstVoc_HQ_2.ckpt")
 
     format_options = [ft.dropdown.Option(option) for option in contants.OUTPUT_FORMATS]
     dropdown_format = create_dropdown(format_options, "Select a format", "mp3")
+
+    def on_selecte_model(e: ft.ControlEvent):
+        model_options = [ft.dropdown.Option(option) for option in contants.MODELS[e.control.value]]
+        dropdown_model.options = model_options
+        dropdown_model.update()
+        
+    process_options = [ft.dropdown.Option(option) for option in contants.MODELS]
+    dropdown_process = create_dropdown(process_options, "Select process", "mdx23c", on_selecte_model)
+
+    
 
     def create_switch(value=True):
         return Switch(
@@ -129,6 +140,13 @@ def main(page: ft.Page):
         child=output_directory_path
     )
 
+    process_card = create_card(
+        "Process",
+        icons.MODEL_TRAINING,
+        None,
+        100,
+        child=dropdown_process
+    )
     model_card = create_card(
         "Model",
         icons.MODEL_TRAINING,
@@ -273,6 +291,7 @@ def main(page: ft.Page):
                     Row(
                         spacing=15,
                         controls=[
+                            process_card,
                             model_card,
                             audio_format_card
                         ]
@@ -283,7 +302,7 @@ def main(page: ft.Page):
                             # separate_card,
                             id3_card,
                             midi_card,
-                            # lyric_card
+                            lyric_card
                         ]
                     ),
                     Row(
