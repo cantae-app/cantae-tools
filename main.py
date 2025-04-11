@@ -5,14 +5,14 @@ import sys
 import src.constants as contants
 import src.inference as inference
 
-class CapturingOutput(io.StringIO):
-    def __init__(self, text_field):
-        super().__init__()
-        self.text_field = text_field
+# class CapturingOutput(io.StringIO):
+#     def __init__(self, text_field):
+#         super().__init__()
+#         self.text_field = text_field
 
-    def write(self, s):
-        self.text_field.value += s
-        self.text_field.update()
+#     def write(self, s):
+#         self.text_field.value += s
+#         self.text_field.update()
 
 def main(page: ft.Page):
     page.title = "Cantaê Tools"
@@ -21,7 +21,7 @@ def main(page: ft.Page):
     page.bgcolor = "#111111"
     page.theme_mode = ft.ThemeMode.DARK
     page.padding = 20
-    page.window.width = 700
+    page.window.width = 800
     page.window.height = 800
     page.window.min_width = 700
     page.window.min_height = 800
@@ -73,8 +73,8 @@ def main(page: ft.Page):
         )
 
     #dropdown components
-    model_options = [ft.dropdown.Option(option) for option in contants.MODELS['mdx23c']]
-    dropdown_model = create_dropdown(model_options, "Select a model", "MDX23C-8KFFT-InstVoc_HQ_2.ckpt")
+    model_options = [ft.dropdown.Option(option) for option in contants.MODELS['mdxnet']]
+    dropdown_model = create_dropdown(model_options, "Select a model", "UVR_MDXNET_KARA.onnx")
 
     format_options = [ft.dropdown.Option(option) for option in contants.OUTPUT_FORMATS]
     dropdown_format = create_dropdown(format_options, "Select a format", "mp3")
@@ -85,7 +85,7 @@ def main(page: ft.Page):
         dropdown_model.update()
         
     process_options = [ft.dropdown.Option(option) for option in contants.MODELS]
-    dropdown_process = create_dropdown(process_options, "Select process", "mdx23c", on_selecte_model)
+    dropdown_process = create_dropdown(process_options, "Select process", "mdxnet", on_selecte_model)
 
     
 
@@ -263,8 +263,8 @@ def main(page: ft.Page):
     )
 
     # sys.stdout = PrintRedirector(text_field)
-    sys.stdout = CapturingOutput(text_field)
-    sys.stderr = CapturingOutput(text_field)
+    # sys.stdout = CapturingOutput(text_field)
+    # sys.stderr = CapturingOutput(text_field)
 
     start_text=ft.Text("Start Process", color="white", weight=FontWeight.BOLD, size=14, disabled=start_process)
     start_row = Row([start_text])

@@ -21,3 +21,13 @@ flet run main.py -d
 # Build app
 flet build windows --output build
 ```
+
+You may need to reinstall both packages directly, allowing pip to calculate the right versions for your platform, for example:
+
+- `pip uninstall torch onnxruntime`
+- `pip cache purge`
+- `pip install --force-reinstall torch torchvision torchaudio`
+- `pip install --force-reinstall onnxruntime-gpu`
+
+I generally recommend installing the latest version of PyTorch for your environment using the command recommended by the wizard here:
+<https://pytorch.org/get-started/locally/>

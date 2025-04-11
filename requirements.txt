@@ -1,4 +1,4 @@
 mutagen
 basic-pitch[tf]
-flet
+flet==0.24.1
 audio-separator[gpu]
