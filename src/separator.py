@@ -1,7 +1,8 @@
 from audio_separator.separator import Separator
 from pathlib import Path
+import tempfile
 
-def separate(audio_file, file_name, model_filename, output_format, output_dir):
+def separate(audio_file, file_name, model_filename, output_format, output_dir, model_dir = tempfile.gettempdir()):
 
     output_names = {
         "Vocals": f'{file_name} - (Vocals)',
@@ -11,7 +12,7 @@ def separate(audio_file, file_name, model_filename, output_format, output_dir):
     separator = Separator(
         output_format=output_format,
         output_dir=output_dir,
-        model_file_dir='models',
+        model_file_dir=model_dir,
     )
 
     separator.load_model(model_filename=model_filename)

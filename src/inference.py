@@ -1,5 +1,5 @@
 
-def process(input_dir, output_dir, model, output_format, copy_tags, save_mid, save_lyric):
+def process(input_dir, output_dir, model_dir, model, output_format, copy_tags, save_mid, save_lyric):
 
     from pathlib import Path
     import src.midi as midi
@@ -38,7 +38,7 @@ def process(input_dir, output_dir, model, output_format, copy_tags, save_mid, sa
             print(f"► Starting {count}/{len(audio_files)}: ", audio_file_name)
 
             # Separete audio files
-            primary_stem_file, secondary_stem_file = separator.separate(audio_file, audio_file_name, model, output_format, output_dir)
+            primary_stem_file, secondary_stem_file = separator.separate(audio_file, audio_file_name, model, output_format, output_dir, model_dir)
 
             # Copy original tags
             if copy_tags:

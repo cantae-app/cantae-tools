@@ -4,15 +4,16 @@ from flet import *
 import sys
 import src.constants as contants
 import src.inference as inference
+import json
 
-# class CapturingOutput(io.StringIO):
-#     def __init__(self, text_field):
-#         super().__init__()
-#         self.text_field = text_field
+class CapturingOutput(io.StringIO):
+    def __init__(self, text_field):
+        super().__init__()
+        self.text_field = text_field
 
-#     def write(self, s):
-#         self.text_field.value += s
-#         self.text_field.update()
+    def write(self, s):
+        self.text_field.value += s
+        self.text_field.update()
 
 def main(page: ft.Page):
     page.title = "Cantaê Tools"
@@ -56,8 +57,21 @@ def main(page: ft.Page):
         size=12
     )
 
+    def output_model_result(e: FilePickerResultEvent):
+        output_model_path.value = e.path if e.path else empty_directory
+        output_model_path.update()
+
+    output_model = FilePicker(on_result=output_model_result)
+    output_model_path = Text(
+        empty_directory,
+        overflow=ft.TextOverflow.ELLIPSIS,
+        max_lines=1,
+        color="#8e8e8e",
+        size=12
+    )
+
     # hide all dialogs in overlay
-    page.overlay.extend([input_directory, output_directory])
+    page.overlay.extend([input_directory, output_directory, output_model])
 
     def create_dropdown(options, label, value=None, on_change=None):
         return Dropdown(
@@ -140,6 +154,14 @@ def main(page: ft.Page):
         child=output_directory_path
     )
 
+    output_model = create_card(
+        "Model Directory",
+        Icons.OUTPUT,
+        output_model.get_directory_path,
+        ink=True,
+        child=output_model_path
+    )
+
     process_card = create_card(
         "Process",
         Icons.MODEL_TRAINING,
@@ -147,6 +169,7 @@ def main(page: ft.Page):
         100,
         child=dropdown_process
     )
+
     model_card = create_card(
         "Model",
         Icons.MODEL_TRAINING,
@@ -222,6 +245,21 @@ def main(page: ft.Page):
         if start: return
 
         if not (input_directory_path.value == empty_directory  and input_directory_path.value == empty_directory):
+
+            # save settings in client storage
+            storageData = {
+                "input_directory_path": input_directory_path.value,
+                "output_directory_path": output_directory_path.value,
+                "output_model_path": output_model_path.value,
+                "dropdown_model": dropdown_model.value,
+                "dropdown_format": dropdown_format.value,
+                "id3_tags": id3_tags.value,
+                "mid_file": mid_file.value,
+                "lyric_file": lyric_file.value,
+            }
+
+            page.client_storage.set("settings", json.dumps(storageData))
+
             text_field.value = ""
             start = True
             start_row.controls = [
@@ -232,11 +270,13 @@ def main(page: ft.Page):
             inference.process(
                 input_directory_path.value,
                 output_directory_path.value,
+                output_model_path.value,
                 dropdown_model.value,
                 dropdown_format.value,
                 id3_tags.value,
                 mid_file.value,
-                lyric_file.value
+                lyric_file.value,
+                
             )
             start = False
             start_row.controls = [start_text]
@@ -263,11 +303,23 @@ def main(page: ft.Page):
     )
 
     # sys.stdout = PrintRedirector(text_field)
-    # sys.stdout = CapturingOutput(text_field)
-    # sys.stderr = CapturingOutput(text_field)
+    sys.stdout = CapturingOutput(text_field)
+    sys.stderr = CapturingOutput(text_field)
 
     start_text=ft.Text("Start Process", color="white", weight=FontWeight.BOLD, size=14, disabled=start_process)
     start_row = Row([start_text])
+
+    # load settings from client storage
+    settings = page.client_storage.get("settings")
+    if settings:
+        settings = json.loads(settings)
+        input_directory_path.value = settings["input_directory_path"]
+        output_directory_path.value = settings["output_directory_path"]
+        output_model_path.value = settings["output_model_path"]
+        dropdown_model.value = settings["dropdown_model"]
+        dropdown_format.value = settings["dropdown_format"]
+        id3_tags.value = settings["id3_tags"]
+        mid_file.value = settings["mid_file"]
 
     page.add(
         Container(
@@ -285,7 +337,8 @@ def main(page: ft.Page):
                         spacing=15,
                         controls=[
                             input_card,
-                            output_card
+                            output_card,
+                            output_model
                         ]
                     ),
                     Row(
