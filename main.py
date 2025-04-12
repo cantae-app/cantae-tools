@@ -126,7 +126,7 @@ def main(page: ft.Page):
 
     input_card = create_card(
         "Input Directory",
-        icons.INPUT,
+        Icons.INPUT,
         input_directory.get_directory_path,
         ink=True,
         child=input_directory_path
@@ -134,7 +134,7 @@ def main(page: ft.Page):
 
     output_card = create_card(
         "Output Directory",
-        icons.OUTPUT,
+        Icons.OUTPUT,
         output_directory.get_directory_path,
         ink=True,
         child=output_directory_path
@@ -142,14 +142,14 @@ def main(page: ft.Page):
 
     process_card = create_card(
         "Process",
-        icons.MODEL_TRAINING,
+        Icons.MODEL_TRAINING,
         None,
         100,
         child=dropdown_process
     )
     model_card = create_card(
         "Model",
-        icons.MODEL_TRAINING,
+        Icons.MODEL_TRAINING,
         None,
         100,
         child=dropdown_model
@@ -157,7 +157,7 @@ def main(page: ft.Page):
 
     audio_format_card = create_card(
         "Audio Format",
-        icons.AUDIO_FILE,
+        Icons.AUDIO_FILE,
         None,
         100,
         child=dropdown_format
@@ -171,7 +171,7 @@ def main(page: ft.Page):
 
     # separate_card = create_card(
     #     "Separate",
-    #     icons.CALL_SPLIT,
+    #     Icons.CALL_SPLIT,
     #     None,
     #     100,
     #     child=separate_audio
@@ -179,7 +179,7 @@ def main(page: ft.Page):
 
     id3_card = create_card(
         "ID3 Tags",
-        icons.LABEL,
+        Icons.LABEL,
         None,
         100,
         child=id3_tags
@@ -187,7 +187,7 @@ def main(page: ft.Page):
 
     midi_card = create_card(
         "MIDI file",
-        icons.MUSIC_NOTE,
+        Icons.MUSIC_NOTE,
         None,
         100,
         child=mid_file
@@ -195,7 +195,7 @@ def main(page: ft.Page):
 
     lyric_card = create_card(
         "Lyrics",
-        icons.LYRICS,
+        Icons.LYRICS,
         None,
         100,
         child=lyric_file
@@ -206,11 +206,11 @@ def main(page: ft.Page):
 
     # Alert banner
     banner = Banner(
-        bgcolor=colors.AMBER_700,
-        # leading=Icon(icons.WARNING_AMBER_ROUNDED, color=colors.BLACK, size=40),
+        bgcolor=Colors.AMBER_700,
+        # leading=Icon(Icons.WARNING_AMBER_ROUNDED, color=Colors.BLACK, size=40),
         content=Text(
             value="Oops, Input, Output, Model and Format fields are required",
-            color=colors.BLACK,
+            color=Colors.BLACK,
         ),
         actions=[
             TextButton(text="ok", style=ButtonStyle(color="white", bgcolor="black"),  on_click=close_banner)
@@ -332,7 +332,7 @@ def main(page: ft.Page):
                                     controls=[
                                         Row(
                                             [
-                                                Icon(icons.TERMINAL, color="#4e4e4e"),
+                                                Icon(Icons.TERMINAL, color="#4e4e4e"),
                                                 Text("Log", color="white", weight=FontWeight.BOLD, size=14),
                                             ]
                                         ),
