@@ -18,10 +18,17 @@ def separate(audio_file, file_name, model_filename, output_format, output_dir, m
     separator.load_model(model_filename=model_filename)
     primary_stem_path, secondary_stem_path = separator.separate(audio_file,output_names)
 
+    # check primary_stem_path and secondary_stem_path is instrumental and vocals respectively
+    if 'Vocals' in primary_stem_path:
+        primary_stem_path, secondary_stem_path = secondary_stem_path, primary_stem_path
+
     instrumental_path = Path(f'{output_dir}/{primary_stem_path}')
     vocals_path = Path(f'{output_dir}/{secondary_stem_path}')
 
-    print(f"Instrumental path: {instrumental_path}")
-    print(f"Vocals path: {vocals_path}")
+    print(f"✅ Finished Instrumental Path {instrumental_path}")
+    print(f"✅ Finished Vocals Path {vocals_path}")
 
-    return instrumental_path, vocals_path
+    return {
+        "instrumental": instrumental_path,
+        "vocals": vocals_path
+    }

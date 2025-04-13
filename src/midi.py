@@ -6,7 +6,7 @@ from basic_pitch import ICASSP_2022_MODEL_PATH
 def convert_to_midi(audio_file, output_directory, output_name=None):
     # Verify the file exists
     if not os.path.exists(audio_file):
-        raise FileNotFoundError(f"File not found: {audio_file}")
+        raise FileNotFoundError(f"❌ File not found: {audio_file}")
 
     try:
         predict_and_save(
@@ -33,5 +33,5 @@ def convert_to_midi(audio_file, output_directory, output_name=None):
             midi_file = Path(f'{output_directory}/{midi_file}').rename(midi_rename)
 
     except Exception as e:
-        print(f"ERROR: reading or converting audio file: {e}")
+        print(f"❌ ERROR: reading or converting audio file: {e}")
         raise

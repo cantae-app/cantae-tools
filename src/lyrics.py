@@ -1,22 +1,19 @@
 
-def generate_lyrics(audio_file):
+def generate_lyrics(audio_file, output_path):
     import os
     os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
     from faster_whisper import WhisperModel
 
-    print("► Generating lyrics")
+    print("▶️ Generating lyrics")
     model_size = "large-v3"
     model = WhisperModel(model_size, device="cuda", compute_type="float16")
     segments, info = model.transcribe(audio_file, beam_size=5, word_timestamps=True, vad_filter=True)
 
     lyrics = []
-    base_filename = audio_file.rsplit('.mp3', 1)[0]
-    json_file = base_filename + '.json'
-    lrc_file = base_filename + '.lrc'
+    json_file = output_path + '.json'
+    lrc_file = output_path + '.lrc'
     line_id = 0
     
-    print(json_file, lrc_file)
-
     with open(lrc_file, 'w', encoding='utf-8') as f_lines:
         for segment in segments:
             start_time = format_time(segment.start)
@@ -35,6 +32,8 @@ def generate_lyrics(audio_file):
     import json
     with open(json_file, 'w', encoding='utf-8') as f:
         json.dump(lyrics, f, ensure_ascii=False, indent=4)
+
+    print(f"✅ LRC file generated: {lrc_file}")
 
 def format_time(time):
     minutes = int(time // 60)

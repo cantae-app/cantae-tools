@@ -7,6 +7,7 @@ def copy_tags(original, file_path, primary, secondary, output_format):
     if(file_path.suffix == '.mp3' and output_format == 'mp3'):
         # try copying tags
         try:
+            print("▶️ Copying ID3 tags...")
             input_tags = ID3(original)
             primary_tags = ID3(primary)
             secondary_tags = ID3(secondary)
@@ -15,9 +16,8 @@ def copy_tags(original, file_path, primary, secondary, output_format):
 
             for tag in input_tags:
                 secondary_tags[tag] = input_tags[tag]
-
-            print("INFO: Copying ID3 tags...")
             primary_tags.save()
             secondary_tags.save()
+            print("✅ ID3 tags copied successfully")
         except Exception as e:
-            print(f"ERROR : {e}")
+            print(f"❌ ERROR Copy tags : {e}")
