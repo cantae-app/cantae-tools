@@ -30,6 +30,8 @@ def main(page: ft.Page):
     empty_directory = "No directory selected"
     start_process = False
 
+    progress = ft.ProgressBar(color="#e11d48", height=5, value=0.5, bgcolor="#2e2e2e", border_radius=10)
+
     # input directory components
     def input_directory_result(e: FilePickerResultEvent):
         input_directory_path.value = e.path if e.path else empty_directory
@@ -240,6 +242,11 @@ def main(page: ft.Page):
         ],
     )
 
+    def callback(message):
+        print(message)
+        text_field.value += message + "\n"
+        text_field.update()
+
     def on_separate(start):
 
         if start: return
@@ -264,7 +271,7 @@ def main(page: ft.Page):
             start = True
             start_row.controls = [
                 ft.ProgressRing(width=16, height=16, stroke_width = 2, color="white"),
-                ft.Text("Wait for the completion...", color="white", weight=FontWeight.BOLD, size=14)
+                ft.Text("Processing...", color="white", weight=FontWeight.BOLD, size=14)
             ]
             page.update()
             inference.process(
@@ -276,7 +283,6 @@ def main(page: ft.Page):
                 id3_tags.value,
                 mid_file.value,
                 lyric_file.value,
-                
             )
             start = False
             start_row.controls = [start_text]
@@ -371,6 +377,15 @@ def main(page: ft.Page):
                             ),
                         ]
                     ),
+                    # Container(
+                    #     content=Column(
+                    #         expand=True,
+                    #         alignment=MainAxisAlignment.SPACE_BETWEEN,
+                    #         controls=[
+                    #             progress
+                    #         ]
+                    #     )
+                    # ),
                     Row(
                         spacing=15,
                         controls=[
@@ -383,6 +398,7 @@ def main(page: ft.Page):
                                     alignment=MainAxisAlignment.SPACE_BETWEEN,
                                     expand=True,
                                     controls=[
+                                        
                                         Row(
                                             [
                                                 Icon(Icons.TERMINAL, color="#4e4e4e"),
