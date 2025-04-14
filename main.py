@@ -1,19 +1,48 @@
-import io
+
 import flet as ft
 from flet import *
 import sys
-import src.constants as contants
-import src.inference as inference
+sys.path.append('src') 
+
+import io
+import constants as contants
+import inference as inference
 import json
+# import capturing_output as CapturingOutput
 
 class CapturingOutput(io.StringIO):
     def __init__(self, text_field):
         super().__init__()
         self.text_field = text_field
+        self.current_progress = 0
 
     def write(self, s):
-        self.text_field.value += s
+        if '#' in s:
+            num_hashes = s.count('#')
+            total_blocks = self.calculate_blocks(num_hashes) 
+   
+            progress_bar = '🟩' * total_blocks + '🔲' * (10 - total_blocks)
+            s = s.replace('#' * num_hashes, progress_bar)
+
+            if '\r' in s:
+                self.update_line(s)
+            else:
+                self.text_field.value += s
+
+        else:
+            self.text_field.value += s
+        
         self.text_field.update()
+
+    def calculate_blocks(self, num_hashes):
+        total_blocks = int(num_hashes / 156 * 10)
+        return min(total_blocks, 10)
+
+    def update_line(self, progress_bar):
+        lines = self.text_field.value.split('\n')
+        if lines:
+            lines[-1] = progress_bar.strip()
+        self.text_field.value = '\n'.join(lines)
 
 def main(page: ft.Page):
     page.title = "Cantaê Tools"
@@ -29,8 +58,6 @@ def main(page: ft.Page):
     page.window.reziable = False
     empty_directory = "No directory selected"
     start_process = False
-
-    progress = ft.ProgressBar(color="#e11d48", height=5, value=0.5, bgcolor="#2e2e2e", border_radius=10)
 
     # input directory components
     def input_directory_result(e: FilePickerResultEvent):
@@ -242,11 +269,6 @@ def main(page: ft.Page):
         ],
     )
 
-    def callback(message):
-        print(message)
-        text_field.value += message + "\n"
-        text_field.update()
-
     def on_separate(start):
 
         if start: return
@@ -290,12 +312,19 @@ def main(page: ft.Page):
         else:
             page.open(banner)
 
-    text_field = TextField(
-        multiline=True,
-        text_style=TextStyle(color="#8e8e8e", size=14),
-        border=None,
-        read_only=True,
-        border_color="#1e1e1e",
+    # text_field = TextField(
+    #     multiline=True,
+    #     text_style=TextStyle(color="#8e8e8e", size=14),
+    #     border=None,
+    #     read_only=True,
+    #     border_color="#1e1e1e",
+    # )
+
+    text_field = Text(
+        "",
+        selectable=True,
+        font_family="Courier New",
+        size=12,
     )
 
     scroll_log = Column(
@@ -308,7 +337,6 @@ def main(page: ft.Page):
         ]
     )
 
-    # sys.stdout = PrintRedirector(text_field)
     sys.stdout = CapturingOutput(text_field)
     sys.stderr = CapturingOutput(text_field)
 
@@ -326,6 +354,7 @@ def main(page: ft.Page):
         dropdown_format.value = settings["dropdown_format"]
         id3_tags.value = settings["id3_tags"]
         mid_file.value = settings["mid_file"]
+        lyric_file.value = settings["lyric_file"]
 
     page.add(
         Container(

@@ -42,21 +42,21 @@ def process(input_dir, output_dir, model_dir, model, output_format, copy_tags, s
             instrumental, vocals = result["instrumental"], result["vocals"]
 
             # Copy original tags
-            message = f"Coping Tags {count}/{len(audio_files)}: {audio_file_name}"
-            print(message)
             if copy_tags:
+                message = f"Coping Tags {count}/{len(audio_files)}: {audio_file_name}"
+                print(message)
                 tags.copy_tags(audio_file, audio_file_path, instrumental, vocals, output_format)
 
             # Convert vocal to MIDI
-            message = f"Creating midi file {count}/{len(audio_files)}: {audio_file_name}"
-            print(message)
             if save_mid:
+                message = f"Creating midi file {count}/{len(audio_files)}: {audio_file_name}"
+                print(message)
                 midi.convert_to_midi(vocals, output_dir, audio_file_name)
 
             # Generate lyrics
-            message = f"Generating lyrics {count}/{len(audio_files)}: {audio_file_name}"
-            print(message)
             if save_lyric:
+                message = f"Generating lyrics {count}/{len(audio_files)}: {audio_file_name}"
+                print(message)
                 clean_name = clean_filename(vocals.name)
                 safe_audio_file = vocals.parent / clean_name
 
