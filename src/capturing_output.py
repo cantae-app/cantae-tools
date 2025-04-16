@@ -1,4 +1,5 @@
 import io
+import re
 
 class CapturingOutput(io.StringIO):
     def __init__(self, text_field):
@@ -9,9 +10,9 @@ class CapturingOutput(io.StringIO):
     def write(self, s):
         if '#' in s:
             num_hashes = s.count('#')
-            total_blocks = self.calculate_blocks(num_hashes) 
+            total_blocks = self.calculate_blocks(num_hashes)
    
-            progress_bar = '🟩' * total_blocks + '🔲' * (10 - total_blocks)
+            progress_bar = '🟩' * total_blocks + '⬜' * (10 - total_blocks)
             s = s.replace('#' * num_hashes, progress_bar)
 
             if '\r' in s:

@@ -6,6 +6,10 @@
 
 Easily separate vocals and instruments, copy tags, generate MIDI files, and generate lyrics.
 
+<p align="center">
+    <img src="assets/preview.png" >
+</p>
+
 ## Features
 - Separate audio into two stems: instrumental and vocals.
 - Supports all common audio formats (WAV, MP3, FLAC, M4A, etc.).
