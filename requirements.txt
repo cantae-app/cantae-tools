@@ -1,5 +1,0 @@
-mutagen
-basic-pitch[tf]
-flet==0.27.6
-audio-separator[gpu]
-faster_whisper

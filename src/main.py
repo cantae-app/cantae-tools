@@ -1,7 +1,5 @@
 
 import sys
-sys.path.append('src') 
-
 import flet as ft
 from flet import *
 from capturing_output import CapturingOutput

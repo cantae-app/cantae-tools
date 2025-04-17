@@ -2,12 +2,12 @@
 def process(input_dir, output_dir, model_dir, model, output_format, copy_tags, save_mid, save_lyric):
 
     from pathlib import Path
-    import src.midi as midi
-    import src.tags as tags
+    import midi as midi
+    import tags as tags
     import glob
-    import src.separator as separator
-    import src.constants as constants
-    import src.lyrics as lyrics
+    import separator as separator
+    import constants as constants
+    import lyrics as lyrics
     import unicodedata
     import shutil
 
