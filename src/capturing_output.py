@@ -1,5 +1,4 @@
 import io
-import re
 
 class CapturingOutput(io.StringIO):
     def __init__(self, text_field):

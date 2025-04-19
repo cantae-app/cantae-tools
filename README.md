@@ -23,7 +23,7 @@ Easily separate vocals and instruments, copy tags, generate MIDI files, and gene
 flet run main.py -d
 
 # Build app
-flet build windows --output build
+flet build windows -v
 ```
 
 You may need to reinstall both packages directly, allowing pip to calculate the right versions for your platform, for example:

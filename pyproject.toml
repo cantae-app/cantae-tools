@@ -5,18 +5,10 @@ description = "Easily separate vocals and instruments, copy tags, generate MIDI 
 readme = "README.md"
 requires-python = ">=3.9"
 authors = [
-    { name = "Luciano Oliveira", email = "support@cantae.app" }
+    { name = "Luciano Oliveira", email = "support@catae.app" }
 ]
 dependencies = [
-    "mutagen",
-    "basic-pitch[tf]",
-    "flet==0.27.6",
-    "audio-separator[gpu]",
-    "faster-whisper",
-    "torch",
-    "torchvision",
-    "torchaudio",
-    "onnxruntime-gpu"
+  "flet==0.27.6"
 ]
 
 [tool.flet]
@@ -26,10 +18,10 @@ org = "app.cantae"
 
 # project display name that is used as an app title on Android and iOS home screens,
 # shown in window titles and about app dialogs on desktop.
-product = "temp"
+product = "Cantae"
 
 # company name to display in about app dialogs
-company = "Cantaê"
+company = "Cantae"
 
 # copyright text to display in about app dialogs
 copyright = "Copyright (C) 2025 by Cantaê"

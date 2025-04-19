@@ -1,7 +1,7 @@
 
-import sys
 import flet as ft
 from flet import *
+import sys
 from capturing_output import CapturingOutput
 import constants as contants
 import inference as inference
@@ -259,6 +259,7 @@ def main(page: ft.Page):
                 ft.Text("Processing...", color="white", weight=FontWeight.BOLD, size=14)
             ]
             page.update()
+
             inference.process(
                 input_directory_path.value,
                 output_directory_path.value,
