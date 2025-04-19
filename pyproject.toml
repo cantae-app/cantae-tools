@@ -8,7 +8,10 @@ authors = [
     { name = "Luciano Oliveira", email = "support@catae.app" }
 ]
 dependencies = [
-  "flet==0.27.6"
+  "flet==0.27.6",
+  "mutagen",
+  "basic-pitch[tf]",
+  "audio-separator[gpu]"
 ]
 
 [tool.flet]
