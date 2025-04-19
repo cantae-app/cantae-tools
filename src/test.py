@@ -1,12 +1,18 @@
-import separator
+import inference as inference
 
-audio_file = 'C:/Users/Luciano/Music/Deezer Download/Normais/Clayton & Romário - Morena.mp3'
-audio_file_name = 'Clayton & Romário - Morena'
-output_format = 'mp3'
-output_dir = 'C:/Users/Luciano/Music/Deezer Download/Cantae'
+input_directory_path = 'C:/Users/Luciano/Music/Deezer Download/Normais/'
+output_directory_path = 'C:/Users/Luciano/Music/Deezer Download/Cantae/'
+output_model_path = 'C:/Users/Luciano/Downloads/models'
 model = 'UVR_MDXNET_KARA.onnx'
+output_format = 'mp3'
 
-primary_stem_file, secondary_stem_file = separator.separate(audio_file, audio_file_name, model, output_format, output_dir)
-
-print(f"Primary stem file: {primary_stem_file}")
-print(f"Secondary stem file: {secondary_stem_file}")
+inference.process(
+  input_directory_path,
+  output_directory_path,
+  output_model_path,
+  model,
+  output_format,
+  True,
+  True,
+  False
+)
