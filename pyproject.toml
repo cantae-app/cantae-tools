@@ -10,8 +10,9 @@ authors = [
 dependencies = [
   "flet==0.27.6",
   "mutagen",
+  "audio-separator[gpu]",
   "basic-pitch[tf]",
-  "audio-separator[gpu]"
+  "faster_whisper"
 ]
 
 [tool.flet]

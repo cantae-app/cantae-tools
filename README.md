@@ -35,3 +35,9 @@ You may need to reinstall both packages directly, allowing pip to calculate the 
 
 I generally recommend installing the latest version of PyTorch for your environment using the command recommended by the wizard here:
 <https://pytorch.org/get-started/locally/>
+
+- `pip install audio-separator[gpu]`
+- `pip install mutagen`
+- `pip install flet==0.27.6`
+- `pip install basic-pitch[tf]`
+- `pip install faster_whisper`
