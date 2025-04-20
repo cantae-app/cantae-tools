@@ -24,7 +24,12 @@ flet run main.py -d
 
 # Build app
 flet build windows -v
+
+# Packaging desktop app
+flet pack src/main.py --name "catae_tools" --icon "src/assets/icon.png" --product-name "Cantaê Tools" --product-version "1.0.0"
+
 ```
+
 
 You may need to reinstall both packages directly, allowing pip to calculate the right versions for your platform, for example:
 
