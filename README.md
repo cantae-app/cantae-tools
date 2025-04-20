@@ -37,6 +37,7 @@ You may need to reinstall both packages directly, allowing pip to calculate the 
 - `pip cache purge`
 - `pip install --force-reinstall torch torchvision torchaudio`
 - `pip install --force-reinstall onnxruntime-gpu`
+- `pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu126`
 
 I generally recommend installing the latest version of PyTorch for your environment using the command recommended by the wizard here:
 <https://pytorch.org/get-started/locally/>
