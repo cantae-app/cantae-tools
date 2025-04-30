@@ -1,6 +1,4 @@
 import io
-
-import io
 import re
 
 class CapturingOutput(io.StringIO):
